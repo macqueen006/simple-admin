@@ -2,20 +2,26 @@
 
 namespace App\Http\Livewire\Profile;
 
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 
 class ChangePassword extends Component
 {
 
-    public  $reset;
+    public  $password;
+    public $current_password;
+    public $verify_password;
+    public $notify_password =  false;
 
     public $rules = [
-        'reset.password' => 'required|max:20',
-        'reset.verify_password' => 'same:reset.password'
+        'password' => 'required|max:20',
+        'verify_password' => 'same:password',
+        'current_password' => 'required'
     ];
     public $messages = [
-        'reset.password.required' => 'password required',
-        'reset.verify_password.same' => 'password must match'
+        'password.required' => 'password required',
+        'verify_password.same' => 'password must match',
+        'current_password.required' => 'enter password'
     ];
 
     public function updated($propertynames)
@@ -26,8 +32,15 @@ class ChangePassword extends Component
     public function dispatchPassword()
     {
         $this->validate();
+        if (!Hash::check($this->current_password, auth()->user()->password)) {
+            $this->emitSelf('notify_password_reset');
+        }else {
+            auth()->user()->update([
+                'password' => Hash::make($this->password)
+            ]);
         $this->reset();
         $this->emitSelf('notify-profile_reset_password');
+        }
     }
 
 

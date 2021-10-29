@@ -194,17 +194,40 @@
                                 </div>
                                 <!--end::Alert-->
                                 <div class="form-group row">
+                                    <label class="col-xl-3 col-lg-3 col-form-label text-alert">Current Password</label>
+                                    <div class="col-lg-9 col-xl-6">
+                                        <input wire:model="current_password" type="password" class="form-control form-control-lg form-control-solid mb-2" placeholder="Current password">
+                                        @error('reset.current_password') <span class="text-sm-left text-danger pt-2">{{ $message }}</span> @enderror
+                                        <a href="{{ route('password_reset') }}" class="text-sm font-weight-bold">Forgot password ?</a>
+                                        @error('current_password')
+                                        <span class="text-sm-left text-danger pt-2"> {{ $message }}</span>
+                                            @enderror
+
+                                            <span x-data="{ open : false}"
+                                                  x-init="
+                                      @this.on('notify_password_reset', () => {
+                                       setTimeout(() => { open = false }, 2500 );
+                                       open = true;
+                                      })"
+                                                  x-ref="this"
+                                                  style="display: none"
+                                                  x-show.transition.out.duration.1000ms="open" class="text-sm-left text-danger pt-2">Password Incorrect</span>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
                                     <label class="col-xl-3 col-lg-3 col-form-label text-alert">New Password</label>
                                     <div class="col-lg-9 col-xl-6">
-                                        <input wire:model="reset.password" type="password" class="form-control form-control-lg form-control-solid" placeholder="New password">
-                                        @error('reset.password') <span class="text-sm-left text-danger pt-2">{{ $message }}</span> @enderror
+                                        <input wire:model="password" type="password" class="form-control form-control-lg form-control-solid" placeholder="New password">
+                                        @error('password') <span class="text-sm-left text-danger pt-2">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-xl-3 col-lg-3 col-form-label text-alert">Verify Password</label>
                                     <div class="col-lg-9 col-xl-6">
-                                        <input wire:model="reset.verify_password" type="password" class="form-control form-control-lg form-control-solid" placeholder="Verify password">
-                                        @error('reset.verify_password') <span class="text-sm-left text-danger pt-2">{{ $message }}</span> @enderror
+                                        <input wire:model="verify_password" type="password" class="form-control form-control-lg form-control-solid" placeholder="Verify password">
+                                        @error('verify_password') <span class="text-sm-left text-danger pt-2">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
                             </div>
